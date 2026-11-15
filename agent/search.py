@@ -10,7 +10,8 @@ SYNONYMS = {"micrometre": "um", "micrometer": "um", "micrometres": "um", "microm
 
 def tokens(text):
     text = text.lower().replace("µm", " um ").replace("μm", " um ")
-    return [SYNONYMS.get(t, t) for t in WORD.findall(text)]
+    words = [SYNONYMS.get(t, t) for t in WORD.findall(text)]
+    return [w[:-3] + "y" if w.endswith("ies") else w[:-1] if w.endswith("s") and len(w) > 4 else w for w in words]
 
 def load(regime="both"):
     files = {"EU": ["eu"], "US": ["us"], "both": ["eu", "us"]}[regime]
@@ -18,7 +19,7 @@ def load(regime="both"):
 
 def search(query, regime="both", limit=5):
     entries = load(regime)
-    docs = [Counter(tokens(e["title"] * 3 + " " + e["text"])) for e in entries]  # title counts more
+    docs = [Counter(tokens((e["title"] + " ") * 3 + " " + e["text"])) for e in entries]  # title counts more
     n = len(docs)
     q = set(tokens(query))
     df = {t: sum(1 for d in docs if t in d) for t in q}
