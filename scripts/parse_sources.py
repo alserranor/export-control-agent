@@ -50,7 +50,8 @@ eu = [e for e in eu if e["text"].strip(" .'").lower() != "not used"]
 us_file = sorted(RAW.glob("us_ear_part774_*.xml"))[-1]
 tree = etree.parse(str(us_file))
 lines = clean("\n".join(t for t in tree.getroot().itertext()))
-us_version = us_file.stem.split("_")[-1]
+v = us_file.stem.split("_")[-1]
+us_version = f"{v[:4]}-{v[4:6]}-{v[6:]}"
 us = [e for e in split_entries(lines, "US", us_file.name, us_version)
       if e["code"][2] != "6" and e["code"][2:] != "515"]
 
