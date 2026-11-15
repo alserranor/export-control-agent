@@ -44,6 +44,7 @@ lines = clean(soup.get_text("\n"))
 start = next(i for i, l in enumerate(lines) if l.upper() == "ANNEX I")
 end = next((i for i, l in enumerate(lines[start + 1:], start + 1) if l.upper().startswith("ANNEX II")), len(lines))
 eu = split_entries(lines[start:end], "EU", eu_file.name, "2026-09-21")
+eu = [e for e in eu if e["text"].strip(" .'").lower() != "not used"]
 
 # --- US: whole Part 774 XML, then drop the 600 series and x515 (military/space, ex-ITAR)
 us_file = sorted(RAW.glob("us_ear_part774_*.xml"))[-1]
